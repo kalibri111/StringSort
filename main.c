@@ -28,6 +28,8 @@ int main(int argC, char* argV[]) {
     sort_backward(index_, rows_count_);
     indexToFile(RESULT_FILEPATH, index_, rows_count_);
 
+    buffToFile(RESULT_FILEPATH, file_buffer_, file_size_);
+
     printf("Successfully sorted in new file out.txt");
 #endif
 }

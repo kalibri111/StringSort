@@ -44,3 +44,5 @@ void fileToBuff(char* file_name, char* buffer, size_t file_size);
  * запись из массивов в файл построчно
  * */
 void indexToFile(char* file_name, struct strview* index, size_t index_size);
+
+void buffToFile(char* file_name, char* buffer, size_t buffer_size);

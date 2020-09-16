@@ -3,3 +3,4 @@ CMakeLists.txt
 test_files/*
 in.txt
 out.txt
+.idea/*

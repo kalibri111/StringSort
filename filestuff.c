@@ -15,7 +15,6 @@ int getFileSize(char* file_name) {
     struct stat buff;
     fstat(fileno(file), &buff);
     fclose(file);
-    int t = buff.st_size;
     return buff.st_size;
 }
 
@@ -67,4 +66,18 @@ void makeIndex(struct strview* index_buffer, char* file_buffer, size_t index_siz
         index_buffer[i].str = index_buffer[i - 1].str + index_buffer[i - 1].strlen + 1;
         index_buffer[i].strlen = strlen(index_buffer[i].str);
     }
+}
+
+void buffToFile(char* file_name, char* buffer, size_t buffer_size) {
+    FILE* file = fopen(file_name, "a+");
+    for (int i = 0; i < buffer_size; ++i) {
+        if (buffer[i] == '\0') {
+            buffer[i] = '\n';
+            fputc(buffer[i], file);
+        } else {
+            fputc(buffer[i], file);
+        }
+    }
+    fputs("----------------------------------------------\n", file);
+    fclose(file);
 }
