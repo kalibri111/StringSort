@@ -11,6 +11,10 @@ int main(int argC, const char* argV[]) {
     run_all_tests();
 #else
     const char* file_name_ = *(argV + 1);
+    if(file_name_ == NULL) {
+        fprintf(stderr, "Input filename required");
+        abort();
+    }
 
     size_t file_size  = getFileSize(file_name_) + 1;  // будем выделять на один символ про запас для \n
     char* buffer      = newBufFromFile(file_name_, file_size);
