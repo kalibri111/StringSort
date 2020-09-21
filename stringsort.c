@@ -6,9 +6,9 @@
 #include <ctype.h>
 
 
-int forward_strcmp(const struct strview* str1, const struct strview* str2) {
-    char* lhs_str = str1->str;
-    char* rhs_str = str2->str;
+int forward_strcmp(const void* str1, const void* str2) {
+    char* lhs_str = ((const struct strview*)str1)->str;
+    char* rhs_str = ((const struct strview*)str2)->str;
 
     while (*lhs_str && *rhs_str) {
 //        передвигаем указатель, пока не найдем букву
@@ -30,11 +30,14 @@ int forward_strcmp(const struct strview* str1, const struct strview* str2) {
     return 0;
 }
 
-int reversed_strcmp(const struct strview* str1, const struct strview* str2) {
+int reversed_strcmp(const void* str1, const void* str2) {
 //    идем с конца
-    char* lhs_str = str1->str + str1->strlen - 1;
-    char* rhs_str = str2->str + str1->strlen - 1;
-    while (*lhs_str && *rhs_str) {
+    const struct strview* str1_v = (const struct strview*)str1;
+    const struct strview* str2_v = (const struct strview*)str2;
+
+    char* lhs_str = str1_v->str + str1_v->strlen - 1;
+    char* rhs_str = str2_v->str + str2_v->strlen - 1;
+    while (lhs_str - str1_v->str > 0 && rhs_str - str2_v->str > 0) {
 //        передвигаем указатель назад, пока не найдем букву
         while (!isalpha(*lhs_str)) {
             --lhs_str;
@@ -59,7 +62,7 @@ int reversed_strcmp(const struct strview* str1, const struct strview* str2) {
  * quicksort по схеме Хоара
  * */
 int partition(struct strview* arrOfStrings, int leftIndex, int rightIndex,
-        int (*comp)(const struct strview* str1, const struct strview* str2)) {
+        int (*comp)(const void* str1, const void* str2)) {
     int l_index = leftIndex;
     int r_index = rightIndex;
     struct strview* sample = &arrOfStrings[(l_index + r_index) / 2];
@@ -86,7 +89,7 @@ int partition(struct strview* arrOfStrings, int leftIndex, int rightIndex,
 }
 
 void quicksort(struct strview* array, int l_index, int r_index,
-               int (*comp)(const struct strview* str1, const struct strview* str2)) {
+               int (*comp)(const void* str1, const void* str2)) {
     if (l_index < r_index) {
         int sample_index = partition(array, l_index, r_index, comp);
         quicksort(array, l_index, sample_index, comp);
@@ -95,15 +98,17 @@ void quicksort(struct strview* array, int l_index, int r_index,
 }
 
 void sort(struct strview* arrOfStrings, int nStrings,
-        int (*comp)(const struct strview* str1, const struct strview* str2)) {
+        int (*comp)(const void* str1, const void* str2)) {
     quicksort(arrOfStrings, 0, nStrings - 1, comp);
 }
 
 void sort_forward(struct strview* index_buffer, size_t buffer_size) {
-    sort(index_buffer, buffer_size, forward_strcmp);
+//    sort(index_buffer, buffer_size, forward_strcmp);
+    qsort(index_buffer, buffer_size, sizeof(struct strview), forward_strcmp);
 }
 
 void sort_backward(struct strview* index_buffer, size_t buffer_size) {
-    sort(index_buffer, buffer_size, reversed_strcmp);
+//    sort(index_buffer, buffer_size, reversed_strcmp);
+    qsort(index_buffer, buffer_size, sizeof(struct strview), reversed_strcmp);
 }
 

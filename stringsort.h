@@ -24,9 +24,9 @@ void sort_backward(struct strview* index_buffer, size_t buffer_size);
  * Сравнение строк символ за символом,
  * соответствует <string.h>
  * */
-int forward_strcmp(const struct strview* str1, const struct strview* str2);
+int forward_strcmp(const void* str1, const void* str2);
 
 /*
  * сравнение строк в обратном порядке
  * */
-int reversed_strcmp(const struct strview* str1, const struct strview* str2);
+int reversed_strcmp(const void* str1, const void* str2);

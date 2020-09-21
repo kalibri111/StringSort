@@ -10,9 +10,16 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <stddef.h>
+#include <stdlib.h>
 
-#define MAX_ROW_SIZE 100
 
+/*
+ * тип терминирования файла:
+ * DOUBLE_ZERO - .....\0\0
+ * SINGLE_ZERO - .....\0
+ * INVALID     - .....
+ * */
+enum term_type {DOUBLE_ZERO, SINGLE_ZERO, INVALID};
 
 struct strview
 {
@@ -21,28 +28,35 @@ struct strview
 };
 
 /*
- * создает массив strview, ставит указатель на начало каждого слова
+ * аллоцирует заданное количество структур
  * */
-void makeIndex(struct strview* index_buffer, char* file_buffer, size_t index_size);
+struct strview* newIndexPull(size_t n_count);
+
+/*
+ * создает массив strview, ставит указатель на начало каждого слова
+ * необходимо вызывать free() после использования
+ * */
+struct strview* newIndex(char* file_buffer, size_t index_size, size_t buffer_size);
 
 /*
  * возвращает размер файла в байтах
  * */
-int getFileSize(char* file_name);
+int getFileSize(const char* file_name);
 
 /*
  * подсчет количества строк в файле
  * */
-int fileRowsCount(char* file_name);
+int evaluateBuffer(char* buffer, size_t size, char orig, char new);
 
 /*
  * запись файла в массив построчно, строки разделены \0
+ * необходимо вызывать free() после использования
  * */
-void fileToBuff(char* file_name, char* buffer, size_t file_size);
+char* newBufFromFile(const char* file_name, size_t buf_size);
 
 /*
  * запись из массивов в файл построчно
  * */
-void indexToFile(char* file_name, struct strview* index, size_t index_size);
+void indexToFile(const char* file_name, struct strview* index, size_t index_size);
 
-void buffToFile(char* file_name, char* buffer, size_t buffer_size);
+void buffToFile(const char* file_name, char* buffer, size_t buffer_size);

@@ -2,34 +2,32 @@
 #include "stringsort.h"
 #include "tests.h"
 
-//#define DEBUG
 
-char* RESULT_FILEPATH = "/home/kalibri/MIPT/1_sem/Dedinsky/StringSort/out.txt";
+const char* RESULT_FILEPATH = "../out.txt";
 
 
-int main(int argC, char* argV[]) {
+int main(int argC, const char* argV[]) {
 #ifdef DEBUG
     run_all_tests();
 #else
-    char* file_name_ = *(argV + 1);
-    int file_size_ = getFileSize(file_name_);
-    size_t rows_count_ = fileRowsCount(file_name_);
+    const char* file_name_ = *(argV + 1);
 
-    char file_buffer_[file_size_];
+    size_t file_size  = getFileSize(file_name_) + 1;  // будем выделять на один символ про запас для \n
+    char* buffer      = newBufFromFile(file_name_, file_size);
+    size_t rows_count = evaluateBuffer(buffer, file_size, '\n', '\0');
 
-    struct strview index_[rows_count_];
+    struct strview* index = newIndex(buffer, rows_count, file_size);
 
-    fileToBuff(file_name_, file_buffer_, file_size_);
-    makeIndex(index_, file_buffer_, rows_count_);
-
-    sort_forward(index_, rows_count_);
-    indexToFile(RESULT_FILEPATH, index_, rows_count_);
+    sort_forward(index, rows_count);
+    indexToFile(RESULT_FILEPATH, index, rows_count);
     
-    sort_backward(index_, rows_count_);
-    indexToFile(RESULT_FILEPATH, index_, rows_count_);
+    sort_backward(index, rows_count);
+    indexToFile(RESULT_FILEPATH, index, rows_count);
 
-    buffToFile(RESULT_FILEPATH, file_buffer_, file_size_);
+    buffToFile(RESULT_FILEPATH, buffer, file_size);
 
-    printf("Successfully sorted in new file out.txt");
+    free(buffer);
+    free(index);
+    printf("Successfully sorted in new file %s", RESULT_FILEPATH);
 #endif
 }
