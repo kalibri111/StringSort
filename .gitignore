@@ -1,6 +1,6 @@
 cmake-build-debug/*
 CMakeLists.txt
 test_files/*
-in.txt
+in_.txt
 out.txt
 .idea

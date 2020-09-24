@@ -21,11 +21,11 @@
  * */
 enum term_type {DOUBLE_ZERO, SINGLE_ZERO, INVALID};
 
-struct strview
+typedef struct strview
 {
     size_t strlen;
     char* str;
-};
+} strview_t;
 
 /*
  * аллоцирует заданное количество структур
@@ -33,10 +33,19 @@ struct strview
 struct strview* newIndexPull(size_t n_count);
 
 /*
+ * проверяет тип терминирования файла
+ * возвращает term_type
+ * */
+enum term_type termType(const char* file_buffer, size_t buffer_size);
+
+/*
  * создает массив strview, ставит указатель на начало каждого слова
  * необходимо вызывать free() после использования
+ * возвращает NULL если termType от buffer INVALID
  * */
 struct strview* newIndex(char* file_buffer, size_t index_size, size_t buffer_size);
+
+void destroyIndex(strview_t* index);
 
 /*
  * возвращает размер файла в байтах
@@ -53,6 +62,8 @@ int evaluateBuffer(char* buffer, size_t size, char orig, char new);
  * необходимо вызывать free() после использования
  * */
 char* newBufFromFile(const char* file_name, size_t buf_size);
+
+void destroyBuffer(char* buffer);
 
 /*
  * запись из массивов в файл построчно

@@ -1,7 +1,7 @@
 //
 // Created by kalibri on 09.09.2020.
 //
-#include "filestuff.h"
+#include "../headers/filestuff.h"
 #include <sys/stat.h>
 #include <locale.h>
 #include <wchar.h>
@@ -27,6 +27,10 @@ int evaluateBuffer(char* buffer, size_t size, char orig, char new) {
     return count_;
 }
 
+void destroyBuffer(char* buffer) {
+    free(buffer);
+}
+
 char* newBufFromFile(const char* file_name, size_t buf_size) {
     char* buffer = malloc(sizeof(char) * (buf_size));
     FILE* file = fopen(file_name, "rb");
@@ -36,7 +40,7 @@ char* newBufFromFile(const char* file_name, size_t buf_size) {
     return buffer;
 }
 
-void indexToFile(const char* file_name, struct strview* index, size_t index_size) {
+void indexToFile(const char* file_name, strview_t* index, size_t index_size) {
     FILE* file = fopen(file_name, "a+");
     for (int i = 0; i < index_size; ++i) {
         fputs(index[i].str, file);
@@ -44,6 +48,10 @@ void indexToFile(const char* file_name, struct strview* index, size_t index_size
     }
     fputs("----------------------------------------------\n", file);
     fclose(file);
+}
+
+void destroyIndex(strview_t* index) {
+    free(index);
 }
 
 enum term_type termType(const char* file_buffer, size_t buffer_size) {
@@ -80,8 +88,8 @@ enum term_type termType(const char* file_buffer, size_t buffer_size) {
     return term_t;
 }
 
-struct strview* newIndex(char* file_buffer, size_t index_size, size_t buffer_size) {
-    struct strview* index_buffer = malloc(index_size * sizeof(struct strview));
+strview_t* newIndex(char* file_buffer, size_t index_size, size_t buffer_size) {
+    strview_t* index_buffer = malloc(index_size * sizeof(strview_t));
 
     enum term_type term_t = termType(file_buffer, buffer_size);
 
@@ -110,8 +118,7 @@ struct strview* newIndex(char* file_buffer, size_t index_size, size_t buffer_siz
             }
         }
     } else if (term_t == INVALID) {
-        fprintf(stderr, "Invalid file format");
-        abort();
+        return NULL;
     }
 
     return index_buffer;

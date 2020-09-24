@@ -3,7 +3,7 @@
 //
 
 #include "tests.h"
-#include "stringsort.h"
+#include "../headers/stringsort.h"
 #include <assert.h>
 
 char* empty = "../test_files/empty.txt";
