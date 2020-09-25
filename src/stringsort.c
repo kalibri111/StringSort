@@ -32,7 +32,9 @@ int forward_strcmp(const void* str1, const void* str2) {
 }
 
 int reversed_strcmp(const void* str1, const void* str2) {
-    return common_strcmp(str1, str2, ((const strview_t*)str1)->strlen, ((const strview_t*)str2)->strlen, -1);
+    size_t str1_len = ((const strview_t*)str1)->strlen;
+    size_t str2_len = ((const strview_t*)str2)->strlen;
+    return common_strcmp(str1, str2, str1_len, str2_len, -1);
 }
 
 /*
