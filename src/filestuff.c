@@ -8,34 +8,30 @@
 #include <stdlib.h>
 
 
-int getFileSize(const char* file_name) {
-    FILE* file = fopen(file_name, "rb");
+int getFileSize(FILE* file) {
     struct stat buff = {};
-    stat(file_name, &buff);
-    fclose(file);
+    fstat(fileno(file), &buff);
     return buff.st_size;
 }
 
 int evaluateBuffer(char* buffer, size_t size, char orig, char new) {
-    int count_ = 0;
+    int count = 0;
     for (int i = 0; i < size; ++i) {
         if (buffer[i] == orig) {
-            ++count_;
+            ++count;
             buffer[i] = new;
         }
     }
-    return count_;
+    return count;
 }
 
 void destroyBuffer(char* buffer) {
     free(buffer);
 }
 
-char* newBufFromFile(const char* file_name, size_t buf_size) {
+char* newBufFromFile(FILE* file, size_t buf_size) {
     char* buffer = malloc(sizeof(char) * (buf_size));
-    FILE* file = fopen(file_name, "rb");
     fread(buffer, sizeof(char), buf_size, file);
-    fclose(file);
     buffer[buf_size - 1] = '\n';
     return buffer;
 }

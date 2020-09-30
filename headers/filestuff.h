@@ -50,7 +50,7 @@ void destroyIndex(strview_t* index);
 /*
  * возвращает размер файла в байтах
  * */
-int getFileSize(const char* file_name);
+int getFileSize(FILE* file);
 
 /*
  * подсчет количества строк в файле
@@ -61,7 +61,7 @@ int evaluateBuffer(char* buffer, size_t size, char orig, char new);
  * запись файла в массив построчно, строки разделены \0
  * необходимо вызывать free() после использования
  * */
-char* newBufFromFile(const char* file_name, size_t buf_size);
+char* newBufFromFile(FILE* file, size_t buf_size);
 
 void destroyBuffer(char* buffer);
 
